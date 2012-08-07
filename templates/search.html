@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block content %}
+	<h3>I want to go...</h3>
+	<form action="{{ url_for('search') }}" method=post>
+		<label for="from_address">From...</label>
+		<input type="text" name="from_address" placeholder="Flat 17, Waggon & Horses Lane, Norwich, NR3 1JP" value="Flat 17, Waggon & Horses Lane, Norwich, NR3 1JP" />
+
+		<label for="to_address">To...</label>
+		<input type="text" name="to_address" placeholder="21 Colegate Norwich, Norfolk NR3 1BN" value="21 Colegate Norwich, Norfolk NR3 1BN" />
+
+		<input type="submit" value="Submit"/>
+	</form>
+{% endblock %}

@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block content %}
+	<h3>You searched for directions from...</h3>
+	<p>{{ user_input.from_address }}</p>
+	<h3>To</h3>
+	<p>{{ user_input.to_address }}</p>
+	<h3>The result from the Google Direction API:</h3>
+	<code>{{ user_input.directions_data }}</code>
+	<code>{{ user_input.places_response }}</code>
+	{% if user_input.data == False: %}
+		<p>No Response</p>
+	{% else: %}
+		<p>Successful Response</p>
+		<p>Total Distance: {{ user_input.directions_data.total_distance }} meters</p>
+		<p>Total Expected Duration: {{ user_input.directions_data.total_duration }} seconds</p>
+		<table>
+			<thead>
+				<th>Info</th>
+				<th>Instructions</th>
+				<th>Points of Interest</th>
+			</thead>
+			<tbody>
+
+		{% for step in user_input.directions_data.get_steps() %}
+			<tr class="steps">
+				<td>{{ step.distance }} meters, eta {{ step.duration }} seconds<br/>
+						Start Location: {{ step.start_location.lat }}, {{ step.start_location.lng }}
+				</td>
+				{% autoescape false %}
+					<td>{{ step.html_instructions }}</td>
+				{% endautoescape %}
+				<td>
+					<strong>Start Location</strong><br/><br/>
+						{% for poi in step.start_location.location_pois() %}
+							<p>{{ poi.name }}</p>
+							<p>{{ poi.category }}</p>
+						{% else %}
+							<p>No POIS</p>
+						{% endfor %}
+					<strong>End Location</strong><br/><br/>
+						{% for poi in step.end_location.location_pois() %}
+							<p>{{ poi.name }}</p>
+							<p>{{ poi.category }}</p>
+						{% else %}
+							<p>No POIS</p>
+						{% endfor %}
+				</td>
+			</tr>
+		{% else %}
+			<tr>
+				<td colspan="2">No Steps To Complete!</td>
+			</tr>
+		{% endfor %}
+			</tbody>
+		</table>
+
+	{% endif %}
+{% endblock %}
