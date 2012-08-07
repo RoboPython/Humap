@@ -6,7 +6,7 @@ from contextlib import closing
 import yrs_apis
 
 CONFIG_LOCATION='settings'
-DATABASE = '/home/mancub/Dev/DB/maps.db'
+DATABASE = '/home/mancub/Dev/maps/maps.db'
 DEBUG = True
 SECRET_KEY = 'Xc93lKE0dQ'
 USERNAME = 'admin'

@@ -3,6 +3,7 @@ from cgi import escape
 import urllib
 import json
 
+
 def get_directions(origin, destination):
 	# escape the characters to construct the URL
 	origin = escape(origin)
@@ -95,5 +96,6 @@ class Point_of_interest:
 		self.icon = poi['icon']
 		self.name = poi['name']
 		self.category = poi['types']
+
 		#self.rating = poi['rating']
 
