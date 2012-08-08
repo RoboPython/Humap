@@ -9,6 +9,8 @@ import urllib
 import json
 #import python debugger for debugging
 import pdb
+#keep everything neat and import the maths functs here
+from math import radians, cos, sin, asin, sqrt
 
 CONFIG_LOCATION='settings'
 DATABASE = '/home/mancub/Dev/maps/maps.db'
@@ -111,12 +113,42 @@ def get_pois(lat, lng):
 """
     @author Anthony Stansbridge <anthony@anthonystansbridge.co.uk>
 
+    @description private _distance function is to be used with sqlite, it calculates the distance between lat and lng coordinates based upon the haversine formula
+
+    @params origin_lat:float - latitude coordinate, origin_lng:float - longitude coordinate, dest_lat:float - latitude coordinate, dest_lng:float - longitude coordinate
+
+    @extra this function is added to the sqlite connection upon searching for points of interest,
+        reference: http://code.activestate.com/recipes/438802-adding-sqlite-sign-function/
+""" 
+def _distance(origin_lat, origin_lng, dest_lat, dest_long):
+        #turn coordinates to radians
+        origin_lng, origin_lat, dest_lng, dest_lat = map(radians, [origin_lng, origin_lat, dest_lng, dest_lat])
+
+        #temp variables to clear up clutter for the individual haversine functions
+        temp_lng = origin_lng - dest_lng
+        temp_lat = origin_lat - dest_lat
+
+        # haversine + cosine of latitude 1 * cosine of latitude 1 * haversine
+        a = sin(temp_lat/2)**2 + cos(origin_lat) * cos(dest_lat) * sin(temp_lng/2)**2
+        # arc sine (sin-1) of A - could multiply Earths radius here but splitting it up for clarity
+        c = 2 * asin(sqrt(a))
+
+        #Earths average radius by variable c then converting the km to meters
+        meters = (6367.5 * c)*1000
+
+    return meters
+
+"""
+    @author Anthony Stansbridge <anthony@anthonystansbridge.co.uk>
+
     @description Returns a list of Point_of_interest Objects containing data that is obtained from the database
 
     @params lat:string/float - latitude coordinates, lng:string/float - longitude coordinates, [optional]radius:int - radius around lat/lng to search for points of interest
 
+    @extra Due to limitations with 
 """ 
-def query_pois(lat, long, radius = 10):
+def query_pois(lat, lng, radius = 10):
+    g.db.create_function('distance', 4, _distance)
     result_set = g.db.execute('SELECT lat, lng, icon_location, name, category FROM points_of_interest LIMIT 3')
     points_of_interest = []
     for row in result_set.fetchall():
