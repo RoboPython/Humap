@@ -7,6 +7,8 @@ import requests
 from cgi import escape
 import urllib
 import json
+#import python debugger for debugging
+import pdb
 
 CONFIG_LOCATION='settings'
 DATABASE = '/home/mancub/Dev/maps/maps.db'
@@ -99,8 +101,8 @@ def get_pois(lat, lng):
             #return poi classes
             points_of_interest.append(Point_of_interest(result))
 
-        #get the pois from the DB
-        points_of_interest.append(query_pois(lat, lng))
+        #get the pois from the DB and add to the list of POIs
+        points_of_interest.extend(query_pois(lat, lng))
         return points_of_interest
     else:
         # return False
