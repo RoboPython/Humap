@@ -120,9 +120,9 @@ def get_pois(lat, lng):
     @extra this function is added to the sqlite connection upon searching for points of interest,
         reference: http://code.activestate.com/recipes/438802-adding-sqlite-sign-function/
 """ 
-def _distance(origin_lat, origin_lng, dest_lat, dest_long):
+def _distance(origin_lat, origin_lng, dest_lat, dest_lng):
     #turn coordinates to radians
-    origin_lng, origin_lat, dest_lng, dest_lat = map(radians, [origin_lng, origin_lat, dest_lng, dest_lat])
+    origin_lat, origin_lng, dest_lat, dest_lng  = map(radians, [origin_lng, origin_lat, dest_lng, dest_lat])
 
     #temp variables to clear up clutter for the individual haversine functions
     temp_lng = origin_lng - dest_lng
@@ -145,11 +145,11 @@ def _distance(origin_lat, origin_lng, dest_lat, dest_long):
 
     @params lat:string/float - latitude coordinates, lng:string/float - longitude coordinates, [optional]radius:int - radius around lat/lng to search for points of interest
 
-    @extra Due to limitations with 
+    @extra Due to limitations with sqlite not having built in math functions, the _distance function has been created and ported for use within the query
 """ 
 def query_pois(lat, lng, radius = 10):
     g.db.create_function('distance', 4, _distance)
-    result_set = g.db.execute('SELECT lat, lng, icon_location, name, category FROM points_of_interest LIMIT 3')
+    result_set = g.db.execute('SELECT lat, lng, icon_location, name, category FROM points_of_interest WHERE distance(lat, lng, ?, ?) < 10', [lat, lng])
     points_of_interest = []
     for row in result_set.fetchall():
         # assign data to dictionary to format it correctly (should have thought about the structure better)
