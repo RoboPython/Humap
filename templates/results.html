@@ -33,14 +33,12 @@
 					<strong>Start Location</strong><br/><br/>
 						{% for poi in step.start_location.location_pois() %}
 							<p>{{ poi.name }}</p>
-							<p>{{ poi.category }}</p>
 						{% else %}
 							<p>No POIS</p>
 						{% endfor %}
 					<strong>End Location</strong><br/><br/>
 						{% for poi in step.end_location.location_pois() %}
 							<p>{{ poi.name }}</p>
-							<p>{{ poi.category }}</p>
 						{% else %}
 							<p>No POIS</p>
 						{% endfor %}
