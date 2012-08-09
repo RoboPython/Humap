@@ -2,29 +2,17 @@
 	<html>
 		<head>
 			<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
-			<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='bootstrap.css') }}">
 			<script src="http://code.jquery.com/jquery-latest.js"></script>
-			<script src="{{ url_for('static', filename='bootstrap.js') }}"></script>
+			<script src="{{ url_for('static', filename='script.js') }}"></script>
+			<script src="http://maps.google.com/maps/api/js?key=AIzaSyCx3PCrVGpP6EJX940iMkP5i9QqVjdubAc&sensor=true&libraries=places"></script>
 			<title>Humap - Young Rewired State 2012</title>
 		</head>
 		<body>
 			<div class="container">
-				<div class="row">
-					<div class="navbar">
-						<div class="navbar-inner">
-							<div class="container">
-								<a class="brand" href="#">
-									Humap
-								</a>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="row">
-					<div class="span12">
-						{% block content %}
-						{% endblock %}
-					</div>
+				<h2 title="Humap" class="inner_shadow">Humap</h2>
+				<div class="content_wrapper">
+					{% block content %}
+					{% endblock %}
 				</div>
 			</div>
 		</body>

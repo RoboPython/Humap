@@ -1,13 +1,18 @@
 {% extends "base.html" %}
 {% block content %}
-	<h3>I want to go...</h3>
+	<p>I would like to go ... </p>
 	<form action="{{ url_for('search') }}" method=post>
-		<label for="from_address">From...</label>
-		<input type="text" name="from_address" placeholder="Flat 17, Waggon & Horses Lane, Norwich, NR3 1JP" value="Flat 17, Waggon & Horses Lane, Norwich, NR3 1JP" />
-
-		<label for="to_address">To...</label>
-		<input type="text" name="to_address" placeholder="21 Colegate Norwich, Norfolk NR3 1BN" value="21 Colegate Norwich, Norfolk NR3 1BN" />
-
-		<input type="submit" value="Submit"/>
+		<div class="input_wrap">
+			<input type="text" placeholder="From here" name="from_address" id="from_address"/><div class="gps_nav"></div>
+		</div>
+		<div class="input_wrap">
+			<input type="text" placeholder="To here" name="to_address" id="to_address" />
+		</div>
+		<div class="input_wrap">
+			<div class="google_log">
+				<img src="http://maps.gstatic.com/mapfiles/powered-by-google-on-white.png" />
+			</div>
+			<input type="submit" value="Directions &raquo" />
+		</div>
 	</form>
 {% endblock %}
