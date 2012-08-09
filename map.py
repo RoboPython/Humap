@@ -13,7 +13,8 @@ import pdb
 from math import radians, cos, sin, asin, sqrt
 
 CONFIG_LOCATION='settings'
-DATABASE = '/home/mancub/Dev/maps/maps.db'
+#DATABASE = '/home/mancub/Dev/maps/maps.db'
+DATABASE = '/home/adam/web/Humap/maps.db'
 DEBUG = True
 SECRET_KEY = 'Xc93lKE0dQ'
 USERNAME = 'admin'
