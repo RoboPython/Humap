@@ -9,12 +9,13 @@ import urllib
 import json
 #import python debugger for debugging
 import pdb
+import random
 #keep everything neat and import the maths functs here
 from math import radians, cos, sin, asin, sqrt
 
 CONFIG_LOCATION='settings'
-#DATABASE = '/home/mancub/Dev/maps/maps.db'
-DATABASE = '/home/adam/web/Humap/maps.db'
+DATABASE = '/home/mancub/Dev/maps/maps.db'
+#DATABASE = '/home/adam/web/Humap/maps.db'
 DEBUG = True
 SECRET_KEY = 'Xc93lKE0dQ'
 USERNAME = 'admin'
@@ -206,6 +207,27 @@ def query_culturegrid(lat, lng, radius=25.0):
     return points_of_interest
 
 """
+    @author Adam Ferguson <fergie57@btinternet.com>
+
+    @description Translates the text input from Googles directions and adds a point of interest to the text helping the user navigate
+
+    @params google_instr:string - Google input string, nearest_POI:Point_of_interest object - contains information about the point of interest
+
+""" 
+def nat_language_sim(google_instr,nearest_POI):
+    natural_language_gen= [" near ",
+                           " past ",
+                           " approximate to ",
+                           " close to ",
+                           " you should pass ",
+                           " you should see ",
+                           " around "]
+    if nearest_POI == False:
+        return google_instr                  
+    else:
+        return google_instr + "," + random.choice(natural_language_gen) + nearest_POI.name
+
+"""
     @author Anthony Stansbridge <anthony@anthonystansbridge.co.uk>
 
     @description Directions class which holds objects containing information required for the user to reach their destination from the starting location
@@ -247,8 +269,6 @@ class Directions:
 class Step:
     def __init__(self, step_data):
         self.step_data = step_data
-        # get the HTML instructions provided by google
-        self.html_instructions = urllib.unquote(self.step_data['html_instructions'])
         # get the distance for this step in meters
         self.distance = self.step_data['distance']['value']
         # get the duration for this step in meters
@@ -257,6 +277,15 @@ class Step:
         self.start_location = Location_step(self.step_data['start_location']['lat'], self.step_data['start_location']['lng'])
         # get the end location for this step
         self.end_location = Location_step(self.step_data['end_location']['lat'], self.step_data['end_location']['lng'])
+
+        #see if there are any POIs at the end location
+        if len(self.end_location.pois) > 0:
+            in_poi = self.end_location.pois[0]
+        else:
+            in_poi = False
+
+        # get the HTML instructions provided by google
+        self.html_instructions = nat_language_sim(urllib.unquote(self.step_data['html_instructions']), in_poi)
 
 """
     @author Anthony Stansbridge <anthony@anthonystansbridge.co.uk>
