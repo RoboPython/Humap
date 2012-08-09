@@ -1,10 +1,13 @@
 {% extends "base.html" %}
 {% block content %}
-	<p>I would like to go ... </p>
 	<form action="{{ url_for('search') }}" method=post>
+
+	<p>I am at ... </p>
 		<div class="input_wrap">
 			<input type="text" placeholder="From here" name="from_address" id="from_address"/><div class="gps_nav"></div>
 		</div>
+
+	<p>and I would like to go to ... </p>
 		<div class="input_wrap">
 			<input type="text" placeholder="To here" name="to_address" id="to_address" />
 		</div>
