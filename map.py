@@ -74,7 +74,7 @@ def get_directions(origin, destination):
     destination = escape(destination)
     # call the google API
     api_call = requests.get('http://maps.googleapis.com/maps/api/directions/json?', params={'origin':origin, 'destination':destination, 'sensor':'false'})
-    api_response = json.loads(api_call.text)
+    api_response = api_call.json
     # check the response from google and the status
     if api_response and api_response['status'] == 'OK':
         # parse the results into a new direction
@@ -94,8 +94,8 @@ def get_pois(lat, lng):
     # set the coordinates for the google API
     coordinates = str(lat) + ',' + str(lng)
     # request results from google
-    api_call = requests.get('https://maps.googleapis.com/maps/api/place/search/json?', params={'key':'AIzaSyAnVJ_cHu9OIst66_nUVobcevGeK9YBH78', 'location':coordinates, 'radius':'10', 'sensor':'false', 'types':'point_of_interest|establishment|restaurant|lodging|food|store|church|place_of_worship'})
-    api_response = json.loads(api_call.text)
+    api_call = requests.get('https://maps.googleapis.com/maps/api/place/search/json?', params={'key':'AIzaSyAnVJ_cHu9OIst66_nUVobcevGeK9YBH78', 'location':coordinates, 'radius':'25', 'sensor':'false', 'types':'point_of_interest|establishment|restaurant|lodging|food|store|church|place_of_worship'})
+    api_response = api_call.json
     points_of_interest = []
     if api_response and api_response['status'] == 'OK':
         # parse the results into points of interest
@@ -105,6 +105,8 @@ def get_pois(lat, lng):
 
         #get the pois from the DB and add to the list of POIs
         points_of_interest.extend(query_pois(lat, lng))
+        #get any pois from culture grid and add to the list of POIs
+        points_of_interest.extend(query_culturegrid(lat, lng))
         return points_of_interest
     else:
         # return False
@@ -147,9 +149,9 @@ def _distance(origin_lat, origin_lng, dest_lat, dest_lng):
 
     @extra Due to limitations with sqlite not having built in math functions, the _distance function has been created and ported for use within the query
 """ 
-def query_pois(lat, lng, radius = 10):
+def query_pois(lat, lng, radius = 25):
     g.db.create_function('distance', 4, _distance)
-    result_set = g.db.execute('SELECT lat, lng, icon_location, name, category FROM points_of_interest WHERE distance(lat, lng, ?, ?) < 10', [lat, lng])
+    result_set = g.db.execute('SELECT lat, lng, icon_location, name, category FROM points_of_interest WHERE distance(lat, lng, ?, ?) < '+str(radius), [lat, lng])
     points_of_interest = []
     for row in result_set.fetchall():
         # assign data to dictionary to format it correctly (should have thought about the structure better)
@@ -166,6 +168,40 @@ def query_pois(lat, lng, radius = 10):
         }
         #add a new POI to the array
         points_of_interest.append(Point_of_interest(pois))
+    return points_of_interest
+
+
+"""
+    @author Anthony Stansbridge <anthony@anthonystansbridge.co.uk>
+
+    @description Returns data from culture grid giving us information on public entities
+
+    @params lat:string/float - latitude coordinates, lng:string/float - longitude coordinates, [optional]radius:int - radius around lat/lng to search for points of interest
+
+"""
+def query_culturegrid(lat, lng, radius=25.0):
+    radius = radius/1609.344
+    culture_grid_url = 'http://www.culturegrid.org.uk/index/select/?q=%7b!spatial%20lat='+str(lat)+'%20long='+str(lng)+'%20radius='+str(radius)+'%20unit=miles%7d%20dcterms.isPartOf:MLAInstitutions&version=2.2&start=0&rows=10&indent=on&sort=geo_distance%20asc&wt=json'
+    api_call = requests.get(culture_grid_url)
+    api_response = api_call.json
+    points_of_interest = []
+    if api_response['responseHeader']['status'] == 0:
+        for location in api_response['response']['docs']:
+            #cant have an empty for
+            pois = {
+            'geometry': { 
+                'location': {
+                    'lat': location['lat'],
+                    'lng': location['lng']
+                }
+            },
+                'icon':'x',
+                'name':location['dc.title'][0],
+                'types':'x'
+            }
+            #add a new POI to the array
+            points_of_interest.append(Point_of_interest(pois))
+
     return points_of_interest
 
 """
