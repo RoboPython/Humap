@@ -1,0 +1,87 @@
+<!doctype html>
+
+
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=1024" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <title>Humap Young Rewired State 2012 Presentation</title>
+    
+    
+    <link href='http://fonts.googleapis.com/css?family=Overlock+SC|Satisfy|Karla' rel='stylesheet' type='text/css'>
+    <link href="http://fonts.googleapis.com/css?family=Open+Sans:regular,semibold,italic,italicsemibold|PT+Sans:400,700,400italic,700italic|PT+Serif:400,700,400italic,700italic" rel="stylesheet" />
+
+
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='presentation_style.css') }}">
+
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='impress.css') }}">
+   
+    
+</head>
+
+
+<body class="impress-not-supported">
+
+
+<div class="fallback-message">
+    <p>Your browser <b>doesn't support the features required</b> by impress.js, so you are presented with a simplified version of this presentation.</p>
+    <p>For the best experience please use the latest <b>Chrome</b>, <b>Safari</b> or <b>Firefox</b> browser.</p>
+</div>
+
+
+<div id="impress">the ea
+
+   <div id="intro" class="step slide" data-x="-2500" data-y="-1500">
+        <q style="text-align: center"><h2>The Problem</h2>  <p>The navigation instructions given by SatNavs and mobile mapping apps are very different to the way humans give directions to each other.</p>
+        </q>
+    </div>
+
+    <div id="slide1" class="step slide" data-x="-1500" data-y="-1500">
+        <q style="text-align: center"><h2>Introducing Humap</h2> <p>Humap attempts to locate public entities and points of interest to give you useful instructions based upon your surroundings.</p>
+        </q>
+		<br/>
+	
+    </div>
+
+    <div class="step slide" data-x="-500" data-y="-1500">
+        <q style="text-align: center"><h2>Datasources and Technology</h2> <p>
+            Google Directions API - The backbone of the application<br/>
+            SatNav Point of Interest Imports - Our own solution for data<br/>
+            Culturegrid API - Providing us with useful public entities<br/>
+            Google Places API - 'Beefing' out our points of interest<br/>
+        </p></q>
+    </div>
+
+    <div class="step slide" data-x="500" data-y="-1500">
+        <q style="text-align: center"><h2>Thanks For Watching</h2> <p>
+            Humap Developers - Adam, Anthony, Oliver and George<br/>
+            Github: http://github.com/Stansbridge/Humap<br/>
+            Special thanks to: <br/>
+            Neontribe - http://www.neontribe.co.uk<br/>
+            All of Young Rewired States organisers and sponsors<br/>
+        </q>
+    </div>
+</div>
+
+
+<div class="hint">
+    <p>Use a spacebar or arrow keys to navigate</p>
+</div>
+<script>
+if ("ontouchstart" in document.documentElement) { 
+    document.querySelector(".hint").innerHTML = "<p>Tap on the left or right to navigate</p>";
+}
+</script>
+
+
+<script src="js/impress.js"></script>
+<script src="{{ url_for('static', filename='impress.js') }}"></script>
+<script>impress().init();</script>
+
+
+</body>
+</html>
+
+
+
