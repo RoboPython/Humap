@@ -1,14 +1,15 @@
 {% extends "base.html" %}
 {% block content %}
-	<div id="map_holder">
-	</div>
-	<p class="desc">We're taking you <strong>from</strong> '{{ template_data.from_address }}' <strong>to</strong> '{{ template_data.to_address }}'</p>
+	<p class="desc">
+		<span class="item_label">From:</span> &ldquo;{{ template_data.from_address }}&rdquo;<br/>
+		<span class="item_label">To:</span> &ldquo;{{ template_data.to_address }}&rdquo;</p>
 	{% if template_data.directions_data == False %}
 		<p>No Response - Error</p>
 	{% else %}
-		<p class="desc"><strong>Total Distance:</strong> {{ template_data.directions_data.total_distance/1000.00 }}km
-		<strong>Journey Duration:</strong> {{ template_data.directions_data.total_duration }} seconds</p>
+		<p class="desc"><span class="item_label">Distance:</span> {{ template_data.directions_data.total_distance/1000.00 }}km <br/>
+		<span class="item_label">Estimated Duration:</span> {{ template_data.total_mins }} minutes, {{ template_data.total_seconds }} seconds</p>
 		<input style="display:none;" id="step_count" value="{{ template_data.step_count }}" />
+		<script  type="text/javascript">var start_lat = {{ template_data.directions_data.start_location.lat }}; var start_lng = {{ template_data.directions_data.start_location.lng }}; var end_lat = {{ template_data.directions_data.end_location.lat }}; var end_lng = {{ template_data.directions_data.end_location.lng }};</script>
 		{% set count = 1 %}
 		{% for step in template_data.directions_data.get_steps() %}
 
@@ -17,8 +18,8 @@
 			{% else %}
 				<div class="result_step" id="step-{{ count }}" style="display:none;">
 			{% endif %}
+					<div class="step_number">Step {{ count }}</div>
 					<p class="desc">
-						Distance {{ step.distance/1000.00 }}km, <strong>Duration</strong> {{ step.duration }} seconds - 
 						{% autoescape false %}
 							{{ step.html_instructions }}
 						{% endautoescape %}

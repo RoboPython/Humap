@@ -71,7 +71,21 @@ def search():
             pickle.dump(directions_response, file_handler)
 
             step_count = len(directions_response.get_steps())
-            template_data = {'to_address': request.form['to_address'], 'from_address': request.form['from_address'],'directions_data':directions_response, 'step_count':step_count, 'counter':1}
+
+            #calculate the minutes
+            total_mins = directions_response.total_duration / 60
+            #calculate the remaining seconds
+            total_seconds = directions_response.total_duration % 60
+
+            template_data = {
+                'to_address': request.form['to_address'], 
+                'from_address': request.form['from_address'],
+                'directions_data':directions_response, 
+                'step_count':step_count, 
+                'counter':1,
+                'total_mins': total_mins,
+                'total_seconds': total_seconds
+            }
             return render_template('results.html', template_data = template_data)
     else:
         return render_template('search.html')

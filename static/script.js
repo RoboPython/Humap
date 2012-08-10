@@ -5,11 +5,11 @@ $(document).ready(function() {
 			set_address_coords(position.coords.latitude, position.coords.longitude);
 		});
 
-		setTimeout(function(){
+		/* setTimeout(function(){
 		navigator.geolocation.getCurrentPosition(function(position) {
 			set_address_coords(position.coords.latitude, position.coords.longitude);
 		});
-		},10000)
+		},10000) */
 	}
 
 	function set_address_coords(lat, lng) {
@@ -85,14 +85,4 @@ $(document).ready(function() {
 
 	});
 
-
-	if($('div#map_holder')) {
-		var mapOptions = {
-          center: new google.maps.LatLng(-34.397, 150.644),
-          zoom: 8,
-          mapTypeId: google.maps.MapTypeId.ROADMAP
-        };
-		var map = new google.maps.Map(document.getElementById("map_holder"),
-            mapOptions);
-	}
 });

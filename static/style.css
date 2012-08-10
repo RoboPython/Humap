@@ -20,6 +20,12 @@ div.container {
 	background: url(/static/images/frosty.png) repeat;
 }
 
+a#no_highlight_pointer {
+	cursor:pointer;
+	text-decoration: none !important;
+}
+
+
 div.pac-container {
 	background-color: #F9F9F9;
 }
@@ -55,6 +61,11 @@ div#prev_step {
 	cursor:pointer;
 }
 
+span.item_label {
+	color:#A5B8DA;
+	font-weight:bold;
+}
+
 div#next_step {
 	display:block;
 	font: -webkit-small-control;
@@ -63,7 +74,7 @@ div#next_step {
 }
 
 div.result_step {
-	height:100px;
+	height:75px;
 }
 
 div.input_wrap {
