@@ -1,15 +1,11 @@
-@font-face {
-	font-family: Cleop;
-	src: url(/static/fonts/Chivo-regular.ttf);
-}
-
 html { 
 	background: url(/static/images/hero.jpg) no-repeat center center fixed; 
 	-webkit-background-size: cover;
 	-moz-background-size: cover;
 	-o-background-size: cover;
 	background-size: cover;
-	font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif
+	font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+	color:#7A7A7A;
 }
 
 div.container {
@@ -29,10 +25,14 @@ div.pac-container {
 }
 div.pac-container > div {
 	font-size:14px;
-	color:#333;
+	color:#7A7A7A;
 	background-color: #F9F9F9;
 }
 
+div#map_holder {
+	width:100%;
+	height:80px;
+}
 
 div.content_wrapper {
 	margin:auto;
@@ -43,10 +43,9 @@ h2 {
 	color:#6A6F8A;
 	text-align: center;
 	margin-bottom: 10px;
-	font-size:50px;
+	font-size:70px;
 	letter-spacing: 1px;
-	text-shadow: 3px 3px 3px #CCCCCC;
-	
+	font-family: 'Satisfy', cursive;
 }
 
 div#prev_step {
@@ -64,7 +63,7 @@ div#next_step {
 }
 
 div.result_step {
-	height:40px;
+	height:100px;
 }
 
 div.input_wrap {
@@ -84,7 +83,7 @@ input[type="text"] {
 	-webkit-appearance: none;
 	padding: .4em;
 	border: 1px solid #AAA;
-	color: #333;
+	color:#7A7A7A;
 	text-shadow: 0 1px 0 white;
 	background: #F9F9F9;
 	width:100%;

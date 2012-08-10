@@ -10,8 +10,10 @@ import json
 #import python debugger for debugging
 import pdb
 import random
+import pickle
+from bs4 import BeautifulSoup
 #keep everything neat and import the maths functs here
-from math import radians, cos, sin, asin, sqrt
+from math import radians, cos, sin, asin, sqrt, floor
 
 CONFIG_LOCATION='settings'
 DATABASE = '/home/mancub/Dev/maps/maps.db'
@@ -20,6 +22,8 @@ DEBUG = True
 SECRET_KEY = 'Xc93lKE0dQ'
 USERNAME = 'admin'
 PASSWORD = 'yrs2012'
+
+CACHE = True
 
 """
     @author Anthony Stansbridge <anthony@anthonystansbridge.co.uk>
@@ -61,6 +65,11 @@ def search():
         if directions_response == False:
             return render_template('search.html')
         else:
+            #randomly generate a filename
+            file_name = 'file_name_'+str(int(floor(random.random() * 100000)))
+            file_handler = open(file_name, 'w')
+            pickle.dump(directions_response, file_handler)
+
             step_count = len(directions_response.get_steps())
             template_data = {'to_address': request.form['to_address'], 'from_address': request.form['from_address'],'directions_data':directions_response, 'step_count':step_count, 'counter':1}
             return render_template('results.html', template_data = template_data)
@@ -76,17 +85,26 @@ def search():
 """ 
 def get_directions(origin, destination):
     # escape the characters to construct the URL
-    origin = escape(origin)
-    destination = escape(destination)
-    # call the google API
-    api_call = requests.get('http://maps.googleapis.com/maps/api/directions/json?', params={'origin':origin, 'destination':destination, 'sensor':'false'})
-    api_response = api_call.json
-    # check the response from google and the status
-    if api_response and api_response['status'] == 'OK':
-        # parse the results into a new direction
-        return Directions(api_response['routes'][0]['legs'][0])
+
+    # if we're using cached requests, send em a dummy!
+    if CACHE == True:
+        file_name = 'file_name_37691'
+        file_handler = open(file_name, 'r')
+        unserialized_object = pickle.load(file_handler)
+        return unserialized_object
+    # get the real deal
     else:
-        return False
+        origin = escape(origin)
+        destination = escape(destination)
+        # call the google API
+        api_call = requests.get('http://maps.googleapis.com/maps/api/directions/json?', params={'origin':origin, 'destination':destination, 'sensor':'false'})
+        api_response = api_call.json
+        # check the response from google and the status
+        if api_response and api_response['status'] == 'OK':
+            # parse the results into a new direction
+            return Directions(api_response['routes'][0]['legs'][0])
+        else:
+            return False
 
 """
     @author Anthony Stansbridge <anthony@anthonystansbridge.co.uk>
@@ -188,7 +206,7 @@ def query_pois(lat, lng, radius = 25):
 def query_culturegrid(lat, lng, radius=25.0):
     radius = radius/1609.344
     culture_grid_url = 'http://www.culturegrid.org.uk/index/select/?q=%7b!spatial%20lat='+str(lat)+'%20long='+str(lng)+'%20radius='+str(radius)+'%20unit=miles%7d%20dcterms.isPartOf:MLAInstitutions&version=2.2&start=0&rows=10&indent=on&sort=geo_distance%20asc&wt=json'
-    api_call = requests.get(culture_grid_url)
+    api_call = requests.get(culture_grid_url, timeout=80)
     api_response = api_call.json
     points_of_interest = []
     if api_response['responseHeader']['status'] == 0:
@@ -230,7 +248,12 @@ def nat_language_sim(google_instr,nearest_POI):
     if nearest_POI == False:
         return google_instr                  
     else:
-        return google_instr + "," + random.choice(natural_language_gen) + nearest_POI.name
+        output_string = BeautifulSoup(google_instr)
+        if output_string.div:
+            output_string.div.decompose()
+            return str(output_string) + "," + random.choice(natural_language_gen) + nearest_POI.name
+        else:
+            return google_instr + "," + random.choice(natural_language_gen) + nearest_POI.name
 
 """
     @author Anthony Stansbridge <anthony@anthonystansbridge.co.uk>

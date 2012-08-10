@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
+	<div id="map_holder">
+	</div>
 	<p class="desc">We're taking you <strong>from</strong> '{{ template_data.from_address }}' <strong>to</strong> '{{ template_data.to_address }}'</p>
 	{% if template_data.directions_data == False %}
 		<p>No Response - Error</p>
