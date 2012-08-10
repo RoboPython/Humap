@@ -19,7 +19,10 @@ $(document).ready(function() {
 		geocoder.geocode({'latLng': coordinates}, function(results, status) {
 		      if (status == google.maps.GeocoderStatus.OK) {
 		        if (results[1]) {
-		         	$('input#from_address').val(results[1].formatted_address);
+		        	if($('input#from_address'))
+		        	{
+		         		$('input#from_address').val(results[1].formatted_address);
+		        	}
 		        }
 		      } else {
 		       	console.log('Geocoding failed')
@@ -37,5 +40,48 @@ $(document).ready(function() {
 
 	google.maps.event.addListener(autocomplete, 'place_changed', function() {
 		var place = autocomplete.getPlace();
+	});
+
+	var init_step_val = $('input#step_count').val();
+	var init_current_step = 1;
+
+	function check_steps()
+	{
+		if(init_current_step > 1)
+		{
+			$('div#prev_step').show();
+		}
+		else
+		{
+			$('div#prev_step').hide();
+		}
+
+		if(init_current_step == init_step_val)
+		{
+			$('div#next_step').hide();
+		}
+		else
+		{
+			$('div#next_step').show();
+		}
+	}
+
+	$('div#next_step').click(function(){
+
+		$('div#step-'+init_current_step).hide();
+		init_current_step += 1;
+		$('div#step-'+init_current_step).show();
+
+		check_steps();
+
+	});
+
+	$('div#prev_step').click(function(){
+		$('div#step-'+init_current_step).hide();
+		init_current_step -= 1;
+		$('div#step-'+init_current_step).show();
+
+		check_steps();
+
 	});
 });

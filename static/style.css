@@ -19,7 +19,7 @@ div.container {
 	left:0;
 	right:0;
 	margin:auto;
-	height:350px;
+	height:425px;
 	width:100%;
 	background: url(/static/images/frosty.png) repeat;
 }
@@ -49,6 +49,23 @@ h2 {
 	
 }
 
+div#prev_step {
+	display:block;
+	font: -webkit-small-control;
+	float:left;
+	cursor:pointer;
+}
+
+div#next_step {
+	display:block;
+	font: -webkit-small-control;
+	float:right;
+	cursor:pointer;
+}
+
+div.result_step {
+	height:40px;
+}
 
 div.input_wrap {
 	float:left;
@@ -58,7 +75,7 @@ div.input_wrap {
 	margin-bottom:10px;
 }
 
-label {
+p.desc {
 	font-size:14px;
 }
 
@@ -85,6 +102,9 @@ input[type="submit"]
 {
 	display:block;
 	float:right;
+}
+
+.blue_button {
 	background-color: #A5B8DA;
 	background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #A5B8DA), color-stop(100%, #7089B3));
 	background-image: -webkit-linear-gradient(top, #A5B8DA, #7089B3);
@@ -108,7 +128,7 @@ input[type="submit"]
 	text-shadow: 0 -1px 1px #64799E;
 }
 
-input[type="submit"]:hover {
+.blue_button:hover {
 	background-color: #9badcc;
 	background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #9badcc), color-stop(100%, #687fa6));
 	background-image: -webkit-linear-gradient(top, #9badcc, #687fa6);
@@ -126,11 +146,11 @@ input[type="submit"]:hover {
 	cursor: pointer;
 }
 
-input[type="submit"]:active {
+.blue_button:active {
 	border: 1px solid #546685;
 	-webkit-box-shadow: inset 0 0 8px 2px #7e8da6, 0 1px 0 0 #eeeeee;
 	-moz-box-shadow: inset 0 0 8px 2px #7e8da6, 0 1px 0 0 #eeeeee;
-	box-shadow: inset 0 0 8px 2px #7e8da6, 0 1px 0 0 #eeeeee; 
+	box-shadow: inset 0 0 8px 2px #7e8da6, 0 1px 0 0 #eeeeee;
 }
 
 div.google_log {

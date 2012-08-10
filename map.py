@@ -58,8 +58,12 @@ def search():
         request.form['to_address']
         request.form['from_address']
         directions_response = get_directions(request.form['from_address'], request.form['to_address'])
-        user_input = {'to_address': request.form['to_address'], 'from_address': request.form['from_address'],'directions_data':directions_response}
-        return render_template('results.html', user_input = user_input)
+        if directions_response == False:
+            return render_template('search.html')
+        else:
+            step_count = len(directions_response.get_steps())
+            template_data = {'to_address': request.form['to_address'], 'from_address': request.form['from_address'],'directions_data':directions_response, 'step_count':step_count, 'counter':1}
+            return render_template('results.html', template_data = template_data)
     else:
         return render_template('search.html')
 """
@@ -96,7 +100,7 @@ def get_pois(lat, lng):
     # set the coordinates for the google API
     coordinates = str(lat) + ',' + str(lng)
     # request results from google
-    api_call = requests.get('https://maps.googleapis.com/maps/api/place/search/json?', params={'key':'AIzaSyAnVJ_cHu9OIst66_nUVobcevGeK9YBH78', 'location':coordinates, 'radius':'25', 'sensor':'false', 'types':'point_of_interest|establishment|restaurant|lodging|food|store|church|place_of_worship'})
+    api_call = requests.get('https://maps.googleapis.com/maps/api/place/search/json?', params={'key':'AIzaSyAKSwnpr9o51WUhFTxAwLzcTY-AeWG7aEs', 'location':coordinates, 'radius':'25', 'sensor':'false', 'types':'point_of_interest|establishment|restaurant|lodging|food|store|church|place_of_worship'})
     api_response = api_call.json
     points_of_interest = []
     if api_response and api_response['status'] == 'OK':
@@ -190,19 +194,20 @@ def query_culturegrid(lat, lng, radius=25.0):
     if api_response['responseHeader']['status'] == 0:
         for location in api_response['response']['docs']:
             #cant have an empty for
-            pois = {
-            'geometry': { 
-                'location': {
-                    'lat': location['lat'],
-                    'lng': location['lng']
+            if location.has_key('dc.title'):
+                pois = {
+                'geometry': { 
+                    'location': {
+                        'lat': location['lat'],
+                        'lng': location['lng']
+                    }
+                },
+                    'icon':'x',
+                    'name':location['dc.title'][0],
+                    'types':'x'
                 }
-            },
-                'icon':'x',
-                'name':location['dc.title'][0],
-                'types':'x'
-            }
-            #add a new POI to the array
-            points_of_interest.append(Point_of_interest(pois))
+                #add a new POI to the array
+                points_of_interest.append(Point_of_interest(pois))
 
     return points_of_interest
 
@@ -252,6 +257,7 @@ class Directions:
             self.steps.append(Step(api_step))
 
     def get_steps(self, offset = False):
+
         if offset == False:
             return self.steps
         else:
@@ -279,7 +285,7 @@ class Step:
         self.end_location = Location_step(self.step_data['end_location']['lat'], self.step_data['end_location']['lng'])
 
         #see if there are any POIs at the end location
-        if len(self.end_location.pois) > 0:
+        if self.end_location.pois and len(self.end_location.pois) > 0:
             in_poi = self.end_location.pois[0]
         else:
             in_poi = False
